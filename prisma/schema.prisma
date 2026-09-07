@@ -1,0 +1,186 @@
+// Prisma Schema for NoteNest PostgreSQL Database
+// Normalized schema with strict relational integrity, foreign keys, and indexes
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  student
+  admin
+  moderator
+}
+
+enum Visibility {
+  public
+  private
+}
+
+enum ReportStatus {
+  pending
+  reviewed
+  dismissed
+}
+
+enum NotificationType {
+  like
+  comment
+  upload
+  admin
+  report
+}
+
+model User {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  passwordHash  String?
+  avatar        String?
+  bio           String?
+  university    String
+  role          Role           @default(student)
+  isSuspended   Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // Relationships
+  notes         Note[]
+  likes         Like[]
+  bookmarks     Bookmark[]
+  comments      Comment[]
+  reports       Report[]       @relation("ReportedBy")
+  notifications Notification[]
+
+  @@index([email])
+  @@index([university])
+}
+
+model Note {
+  id             String         @id @default(uuid())
+  title          String
+  description    String         @db.Text
+  fileUrl        String
+  fileName       String
+  fileSize       Int
+  fileType       String         @default("application/pdf")
+  subject        String
+  university     String
+  course         String
+  semester       String
+  visibility     Visibility     @default(public)
+  authorId       String
+  author         User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  views          Int            @default(0)
+  downloads      Int            @default(0)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  // Relationships
+  tags           NoteTag[]
+  likes          Like[]
+  bookmarks      Bookmark[]
+  comments       Comment[]
+  reports        Report[]
+
+  @@index([subject])
+  @@index([university])
+  @@index([course])
+  @@index([authorId])
+  @@index([createdAt])
+  @@index([views])
+  @@index([downloads])
+}
+
+model Tag {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  notes     NoteTag[]
+
+  @@index([name])
+}
+
+model NoteTag {
+  noteId    String
+  tagId     String
+  note      Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([noteId, tagId])
+  @@index([tagId])
+  @@index([noteId])
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  userId    String
+  noteId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  note      Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, noteId]) // Prevents duplicate likes
+  @@index([noteId])
+  @@index([userId])
+}
+
+model Bookmark {
+  id        String   @id @default(uuid())
+  userId    String
+  noteId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  note      Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, noteId]) // Prevents duplicate bookmarks
+  @@index([noteId])
+  @@index([userId])
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  userId    String
+  noteId    String
+  content   String   @db.Text
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  note      Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([noteId])
+  @@index([userId])
+}
+
+model Report {
+  id          String       @id @default(uuid())
+  reporterId  String
+  noteId      String
+  reason      String
+  details     String?      @db.Text
+  status      ReportStatus @default(pending)
+  reporter    User         @relation("ReportedBy", fields: [reporterId], references: [id], onDelete: Cascade)
+  note        Note         @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  createdAt   DateTime     @default(now())
+
+  @@index([status])
+  @@index([noteId])
+  @@index([reporterId])
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  read      Boolean          @default(false)
+  noteId    String?
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
+
+  @@index([userId, read])
+}

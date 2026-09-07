@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="50%" stop-color="#4338CA" />
+      <stop offset="100%" stop-color="#312E81" />
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#C7D2FE" stop-opacity="0.1" />
+    </linearGradient>
+    <linearGradient id="pageGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#E0E7FF" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A5B4FC" />
+      <stop offset="100%" stop-color="#6366F1" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#070B1A" flood-opacity="0.45" />
+    </filter>
+  </defs>
+
+  <!-- Background rounded squircle -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+
+  <!-- Subtle inner border for premium luster -->
+  <rect x="6" y="6" width="500" height="500" rx="106" fill="none" stroke="url(#glowGrad)" stroke-width="4" />
+
+  <!-- Central Nest / Book Emblem -->
+  <g filter="url(#shadow)" transform="translate(4, 0)">
+    <!-- Open Book Left Page -->
+    <path d="M 256 180 C 210 148, 140 148, 100 162 C 92 165, 86 173, 86 182 L 86 338 C 86 349, 97 357, 108 354 C 144 342, 210 342, 256 376 Z" 
+          fill="url(#pageGrad)" />
+    
+    <!-- Open Book Right Page -->
+    <path d="M 256 180 C 302 148, 372 148, 412 162 C 420 165, 426 173, 426 182 L 426 338 C 426 349, 415 357, 404 354 C 368 342, 302 342, 256 376 Z" 
+          fill="url(#pageGrad)" />
+
+    <!-- Book Spine / Center Binding -->
+    <path d="M 256 180 L 256 376" stroke="#4338CA" stroke-width="6" stroke-linecap="round" />
+
+    <!-- Subtle Page Lines Left -->
+    <line x1="126" y1="216" x2="222" y2="216" stroke="#6366F1" stroke-width="6" stroke-linecap="round" stroke-opacity="0.75" />
+    <line x1="126" y1="252" x2="222" y2="252" stroke="#6366F1" stroke-width="6" stroke-linecap="round" stroke-opacity="0.75" />
+    <line x1="126" y1="288" x2="190" y2="288" stroke="#6366F1" stroke-width="6" stroke-linecap="round" stroke-opacity="0.75" />
+
+    <!-- Subtle Page Lines Right -->
+    <line x1="290" y1="216" x2="386" y2="216" stroke="#6366F1" stroke-width="6" stroke-linecap="round" stroke-opacity="0.75" />
+    <line x1="290" y1="252" x2="386" y2="252" stroke="#6366F1" stroke-width="6" stroke-linecap="round" stroke-opacity="0.75" />
+    <line x1="290" y1="288" x2="354" y2="288" stroke="#6366F1" stroke-width="6" stroke-linecap="round" stroke-opacity="0.75" />
+
+    <!-- Bookmark Ribbon Ribbon / Sparkle -->
+    <path d="M 246 160 L 246 250 L 256 240 L 266 250 L 266 160 Z" fill="#F59E0B" />
+
+    <!-- Top Sparkle / Scholar Star -->
+    <path d="M 256 94 L 263 118 L 287 125 L 263 132 L 256 156 L 249 132 L 225 125 L 249 118 Z" fill="#FBBF24" />
+    <circle cx="340" cy="112" r="6" fill="#FDE68A" opacity="0.8" />
+    <circle cx="172" cy="112" r="5" fill="#FDE68A" opacity="0.8" />
+  </g>
+</svg>
